@@ -1,5 +1,5 @@
 [package]
-name = "syntropd-contextd"
+name = "syntrop-contextd"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

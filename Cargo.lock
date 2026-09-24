@@ -337,7 +337,7 @@ version = "0.2.0"
 dependencies = [
  "anyhow",
  "serde_json",
- "syntropd-contextd",
+ "syntrop-contextd",
  "syntropd-contextd-core",
  "tempfile",
  "tokio",
@@ -349,8 +349,8 @@ version = "0.2.0"
 dependencies = [
  "anyhow",
  "serde_json",
+ "syntrop-contextd",
  "syntropd-contextctl",
- "syntropd-contextd",
  "syntropd-contextd-core",
  "tempfile",
  "tokio",
@@ -545,22 +545,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "syntropd-contextctl"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "clap",
- "clap_complete",
- "serde",
- "serde_json",
- "syntropd-contextd-core",
- "tokio",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "syntropd-contextd"
+name = "syntrop-contextd"
 version = "0.2.0"
 dependencies = [
  "anyhow",
@@ -570,6 +555,21 @@ dependencies = [
  "serde_json",
  "syntropd-contextd-core",
  "thiserror",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "syntropd-contextctl"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "clap_complete",
+ "serde",
+ "serde_json",
+ "syntropd-contextd-core",
  "tokio",
  "tracing",
  "tracing-subscriber",

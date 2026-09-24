@@ -9,7 +9,7 @@ publish = false
 anyhow.workspace = true
 contextctl = { package = "syntropd-contextctl", path = "../../crates/contextctl" }
 contextd-core = { package = "syntropd-contextd-core", path = "../../crates/contextd-core" }
-contextd-daemon = { package = "syntropd-contextd", path = "../../crates/contextd-daemon" }
+contextd-daemon = { package = "syntrop-contextd", path = "../../crates/contextd-daemon" }
 serde_json.workspace = true
 tempfile.workspace = true
 tokio.workspace = true
