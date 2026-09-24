@@ -141,52 +141,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
-name = "contextctl"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "clap",
- "clap_complete",
- "contextd-core",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "contextd-core"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "libc",
- "rustix 0.38.44",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror",
- "toml",
- "tracing",
-]
-
-[[package]]
-name = "contextd-daemon"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "contextd-core",
- "libc",
- "rustix 0.38.44",
- "serde",
- "serde_json",
- "thiserror",
- "tokio",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -382,9 +336,9 @@ name = "qa-edge"
 version = "0.2.0"
 dependencies = [
  "anyhow",
- "contextd-core",
- "contextd-daemon",
  "serde_json",
+ "syntropd-contextd",
+ "syntropd-contextd-core",
  "tempfile",
  "tokio",
 ]
@@ -394,10 +348,10 @@ name = "qa-unit"
 version = "0.2.0"
 dependencies = [
  "anyhow",
- "contextctl",
- "contextd-core",
- "contextd-daemon",
  "serde_json",
+ "syntropd-contextctl",
+ "syntropd-contextd",
+ "syntropd-contextd-core",
  "tempfile",
  "tokio",
 ]
@@ -588,6 +542,52 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "syntropd-contextctl"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "clap_complete",
+ "serde",
+ "serde_json",
+ "syntropd-contextd-core",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "syntropd-contextd"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "libc",
+ "rustix 0.38.44",
+ "serde",
+ "serde_json",
+ "syntropd-contextd-core",
+ "thiserror",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "syntropd-contextd-core"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "libc",
+ "rustix 0.38.44",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror",
+ "toml",
+ "tracing",
 ]
 
 [[package]]
