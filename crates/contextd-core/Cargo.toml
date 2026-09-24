@@ -1,11 +1,11 @@
 [package]
-name = "syntropd-contextd-core"
+name = "syntrop-contextd-core"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 authors.workspace = true
 repository.workspace = true
-publish = false
+description = "Core library and transactional journal context store for syntrop-contextd"
 
 [lib]
 name = "contextd_core"

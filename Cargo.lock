@@ -141,6 +141,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
+name = "contextctl"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "clap_complete",
+ "serde",
+ "serde_json",
+ "syntrop-contextd-core",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -338,7 +353,7 @@ dependencies = [
  "anyhow",
  "serde_json",
  "syntrop-contextd",
- "syntropd-contextd-core",
+ "syntrop-contextd-core",
  "tempfile",
  "tokio",
 ]
@@ -348,10 +363,10 @@ name = "qa-unit"
 version = "0.2.0"
 dependencies = [
  "anyhow",
+ "contextctl",
  "serde_json",
  "syntrop-contextd",
- "syntropd-contextctl",
- "syntropd-contextd-core",
+ "syntrop-contextd-core",
  "tempfile",
  "tokio",
 ]
@@ -553,7 +568,7 @@ dependencies = [
  "rustix 0.38.44",
  "serde",
  "serde_json",
- "syntropd-contextd-core",
+ "syntrop-contextd-core",
  "thiserror",
  "tokio",
  "tracing",
@@ -561,22 +576,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "syntropd-contextctl"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "clap",
- "clap_complete",
- "serde",
- "serde_json",
- "syntropd-contextd-core",
- "tokio",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "syntropd-contextd-core"
+name = "syntrop-contextd-core"
 version = "0.2.0"
 dependencies = [
  "anyhow",

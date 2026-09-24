@@ -5,6 +5,7 @@ edition.workspace = true
 license.workspace = true
 authors.workspace = true
 repository.workspace = true
+description = "Transactional system journal context and execution history engine for syntropd"
 
 [lib]
 name = "contextd_daemon"
@@ -16,7 +17,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow.workspace = true
-contextd-core = { package = "syntropd-contextd-core", path = "../contextd-core" }
+contextd-core = { package = "syntrop-contextd-core", version = "0.2.0", path = "../contextd-core" }
 libc.workspace = true
 rustix.workspace = true
 serde.workspace = true
