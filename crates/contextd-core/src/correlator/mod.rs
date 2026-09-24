@@ -5,8 +5,10 @@
 
 pub mod package_log;
 pub mod timeline;
+pub mod timestamp;
 
 pub use package_log::{
-    parse_dnf_log_line, parse_dpkg_log_line, parse_package_log_stream, PackageTransactionRecord,
+    parse_dnf_log_line, parse_dpkg_log_line, parse_package_log_stream,
+    parse_pacman_log_line, PackageTransactionRecord,
 };
 pub use timeline::{correlate_unit_timeline, UnitIncidentContext};

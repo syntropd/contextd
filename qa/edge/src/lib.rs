@@ -6,3 +6,5 @@ mod corrupt_store_edge;
 mod large_diff_edge;
 #[cfg(test)]
 mod protocol_edge;
+#[cfg(test)]
+mod watcher_edge;
