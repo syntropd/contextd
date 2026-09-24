@@ -24,9 +24,21 @@ impl FileTracker {
     }
 
     /// Sets the baseline content for a watched file without emitting a diff.
+    ///
+    /// Lock poisoning is logged at `error` level so the operator
+    /// notices when another thread panicked holding the snapshots
+    /// mutex.
     pub fn set_baseline(&self, path: &str, content: &str) {
-        if let Ok(mut lock) = self.snapshots.lock() {
-            lock.insert(path.to_string(), content.to_string());
+        match self.snapshots.lock() {
+            Ok(mut lock) => {
+                lock.insert(path.to_string(), content.to_string());
+            }
+            Err(e) => {
+                tracing::error!(
+                    "set_baseline: snapshot mutex poisoned for {}: {}",
+                    path, e
+                );
+            }
         }
     }
 

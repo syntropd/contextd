@@ -15,7 +15,9 @@ use std::path::PathBuf;
 )]
 pub struct Cli {
     /// Path to the contextd Varlink Unix domain socket.
-    #[arg(short = 's', long = "socket", default_value = DEFAULT_SOCKET_PATH, global = true)]
+    /// Uses `--socket`/`-S` (uppercase) to avoid colliding with
+    /// `record --source`/`-s` on the global parser.
+    #[arg(short = 'S', long = "socket", default_value = DEFAULT_SOCKET_PATH, global = true)]
     pub socket: PathBuf,
 
     /// Output results in formatted JSON.
