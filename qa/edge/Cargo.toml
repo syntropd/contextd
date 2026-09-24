@@ -1,0 +1,14 @@
+[package]
+name = "qa-edge"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+anyhow.workspace = true
+contextd-core = { path = "../../crates/contextd-core" }
+contextd-daemon = { path = "../../crates/contextd-daemon" }
+serde_json.workspace = true
+tempfile.workspace = true
+tokio.workspace = true

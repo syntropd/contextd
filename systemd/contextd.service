@@ -1,0 +1,39 @@
+[Unit]
+Description=Syntropd System Chronology and Causality Graph Daemon
+Documentation=https://github.com/syntropd/contextd
+Requires=contextd.socket
+After=network.target contextd.socket
+
+[Service]
+Type=notify
+ExecStart=/usr/local/bin/contextd
+Restart=on-failure
+RestartSec=2s
+WatchdogSec=30s
+
+# Hardened sandboxing
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+PrivateTmp=true
+PrivateDevices=true
+MemoryDenyWriteExecute=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+# Storage and runtime path access
+ReadWritePaths=/var/lib/contextd /run/syntrop
+ReadOnlyPaths=/etc /var/log /usr/lib/systemd/system
+
+# Resource containment
+MemoryHigh=32M
+MemoryMax=64M
+TasksMax=16
+
+[Install]
+WantedBy=multi-user.target
