@@ -8,6 +8,7 @@ use std::fs::{self, File, OpenOptions};
 use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
+use tracing::warn;
 
 /// Manages append-only system event logs on disk.
 pub struct EventStore {
@@ -22,9 +23,15 @@ impl EventStore {
         fs::create_dir_all(root_dir)?;
         let log_path = root_dir.join("events.jsonl");
 
-        // Touch file if it does not exist
-        if !log_path.exists() {
-            File::create(&log_path)?;
+        // Touch file if missing; use create_new to avoid clobbering.
+        match OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&log_path)
+        {
+            Ok(_) => {}
+            Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
+            Err(e) => return Err(ContextdError::Io(e)),
         }
 
         Ok(Self {
@@ -33,7 +40,7 @@ impl EventStore {
         })
     }
 
-    /// Appends a new system event atomically to the log file.
+    /// Appends a new system event to the log file.
     pub fn append(&self, event: &SystemEvent) -> Result<(), ContextdError> {
         let _guard = self.write_lock.lock().map_err(|_| {
             ContextdError::Io(std::io::Error::new(std::io::ErrorKind::Other, "Lock poison"))
@@ -54,6 +61,11 @@ impl EventStore {
     }
 
     /// Queries historical events filtered by unit, timestamp, and maximum result limit.
+    ///
+    /// TODO(perf): for selective unit filters on large logs, walk the
+    /// file backwards from the end so the most recent matching events
+    /// surface without scanning the whole log. Current implementation
+    /// is O(file size) regardless of selectivity.
     pub fn query(
         &self,
         unit: Option<&str>,
@@ -69,23 +81,36 @@ impl EventStore {
         let mut results = Vec::new();
         let mut raw_line = Vec::new();
 
-        while let Ok(n) = reader.read_until(b'\n', &mut raw_line) {
-            if n == 0 {
-                break;
+        loop {
+            match reader.read_until(b'\n', &mut raw_line) {
+                Ok(0) => break,
+                Ok(_) => {}
+                Err(e) => {
+                    return Err(ContextdError::Io(e));
+                }
             }
 
-            let line = String::from_utf8_lossy(&raw_line);
-            let trimmed = line.trim();
-            if !trimmed.is_empty() {
-                if let Ok(event) = serde_json::from_str::<SystemEvent>(trimmed) {
-                    if event.timestamp_us >= since_us {
-                        if unit.is_none() || event.unit.as_deref() == unit {
-                            results.push(event);
-                            if results.len() >= limit {
-                                break;
+            match std::str::from_utf8(&raw_line) {
+                Ok(text) => {
+                    let trimmed = text.trim();
+                    if !trimmed.is_empty() {
+                        if let Ok(event) = serde_json::from_str::<SystemEvent>(trimmed) {
+                            if event.timestamp_us >= since_us {
+                                if unit.is_none() || event.unit.as_deref() == unit {
+                                    results.push(event);
+                                    if results.len() >= limit {
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
+                }
+                Err(_) => {
+                    warn!(
+                        "EventStore: skipping non-UTF-8 line of {} bytes",
+                        raw_line.len()
+                    );
                 }
             }
             raw_line.clear();
