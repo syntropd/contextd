@@ -142,7 +142,7 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
 name = "contextctl"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -348,7 +348,7 @@ dependencies = [
 
 [[package]]
 name = "qa-edge"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "serde_json",
@@ -360,7 +360,7 @@ dependencies = [
 
 [[package]]
 name = "qa-unit"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "contextctl",
@@ -561,7 +561,7 @@ dependencies = [
 
 [[package]]
 name = "syntrop-contextd"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "libc",
@@ -577,7 +577,7 @@ dependencies = [
 
 [[package]]
 name = "syntrop-contextd-core"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "libc",
