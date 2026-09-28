@@ -1,8 +1,9 @@
 //! Command-line argument parser definitions for contextctl.
 
-use clap::{Parser, Subcommand};
-use clap_complete::Shell;
+use clap::{Command, Parser, Subcommand};
+use clap_complete::{generate, Shell};
 use contextd_core::config::DEFAULT_SOCKET_PATH;
+use std::io;
 use std::path::PathBuf;
 
 /// CLI client for contextd system chronology and causality daemon.
@@ -91,4 +92,10 @@ pub enum Commands {
         #[arg(value_enum)]
         shell: Shell,
     },
+}
+
+/// Generates shell completion script to stdout.
+pub fn exec_completions(cmd: &mut Command, shell: Shell) {
+    let bin_name = cmd.get_name().to_string();
+    generate(shell, cmd, bin_name, &mut io::stdout());
 }

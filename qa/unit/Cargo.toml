@@ -7,6 +7,7 @@ publish = false
 
 [dependencies]
 anyhow.workspace = true
+clap.workspace = true
 contextctl = { package = "contextctl", path = "../../crates/contextctl" }
 contextd-core = { package = "syntrop-contextd-core", path = "../../crates/contextd-core" }
 contextd-daemon = { package = "syntrop-contextd", path = "../../crates/contextd-daemon" }

@@ -2,7 +2,7 @@
 
 use anyhow::Result;
 use clap::{CommandFactory, Parser};
-use contextctl::cli::{Cli, Commands};
+use contextctl::cli::{exec_completions, Cli, Commands};
 use contextctl::client::ContextdClient;
 use contextctl::cmd::*;
 

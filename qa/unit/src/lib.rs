@@ -3,22 +3,16 @@
 #[cfg(test)]
 mod config_tests;
 #[cfg(test)]
-mod diff_store_tests;
+mod correlator;
 #[cfg(test)]
-mod diff_tests;
+mod ctl_tests;
 #[cfg(test)]
-mod event_store_tests;
+mod daemon_tests;
 #[cfg(test)]
-mod package_log_tests;
+mod index;
 #[cfg(test)]
-mod pacman_tests;
-#[cfg(test)]
-mod similarity_tests;
-#[cfg(test)]
-mod timeline_tests;
-#[cfg(test)]
-mod timestamp_tests;
-#[cfg(test)]
-mod tracker_tests;
+mod spawn_tests;
 #[cfg(test)]
 mod varlink_tests;
+#[cfg(test)]
+mod watcher;
