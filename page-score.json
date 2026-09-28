@@ -1,21 +1,21 @@
 {
  "repo": "contextd",
- "rev": "517cd64",
+ "rev": "6b7520b",
  "dirty": true,
  "pages": [
+  {
+   "path": "./crates/contextctl/src/client.rs",
+   "lines": 94,
+   "bin_bytes": 10376,
+   "heat_pct": null,
+   "reach": 10
+  },
   {
    "path": "./crates/contextctl/src/cli.rs",
    "lines": 101,
    "bin_bytes": 48856,
    "heat_pct": null,
    "reach": 3
-  },
-  {
-   "path": "./crates/contextctl/src/client.rs",
-   "lines": 95,
-   "bin_bytes": 10376,
-   "heat_pct": null,
-   "reach": 10
   },
   {
    "path": "./crates/contextctl/src/cmd/diff_cmd.rs",
@@ -43,7 +43,7 @@
    "lines": 13,
    "bin_bytes": null,
    "heat_pct": null,
-   "reach": 1
+   "reach": 0
   },
   {
    "path": "./crates/contextctl/src/cmd/record_cmd.rs",
@@ -85,26 +85,26 @@
    "lines": 6,
    "bin_bytes": null,
    "heat_pct": null,
-   "reach": 1
+   "reach": 0
   },
   {
    "path": "./crates/contextd-core/src/correlator/mod.rs",
    "lines": 12,
    "bin_bytes": null,
    "heat_pct": null,
-   "reach": 1
+   "reach": 0
   },
   {
    "path": "./crates/contextd-core/src/correlator/package_log.rs",
    "lines": 191,
-   "bin_bytes": 7179,
+   "bin_bytes": 6046,
    "heat_pct": null,
    "reach": 2
   },
   {
    "path": "./crates/contextd-core/src/correlator/timeline.rs",
    "lines": 65,
-   "bin_bytes": 3163,
+   "bin_bytes": 2030,
    "heat_pct": null,
    "reach": 1
   },
@@ -118,20 +118,20 @@
   {
    "path": "./crates/contextd-core/src/error.rs",
    "lines": 70,
-   "bin_bytes": 88122,
+   "bin_bytes": 1099,
    "heat_pct": null,
    "reach": 5
   },
   {
    "path": "./crates/contextd-core/src/index/event_entry.rs",
    "lines": 40,
-   "bin_bytes": 14021,
+   "bin_bytes": 12546,
    "heat_pct": null,
    "reach": 2
   },
   {
    "path": "./crates/contextd-core/src/index/event_store.rs",
-   "lines": 121,
+   "lines": 120,
    "bin_bytes": 4730,
    "heat_pct": null,
    "reach": 1
@@ -141,7 +141,7 @@
    "lines": 11,
    "bin_bytes": null,
    "heat_pct": null,
-   "reach": 1
+   "reach": 0
   },
   {
    "path": "./crates/contextd-core/src/index/similarity.rs",
@@ -160,14 +160,14 @@
   {
    "path": "./crates/contextd-core/src/watcher/diff_store.rs",
    "lines": 139,
-   "bin_bytes": 9724,
+   "bin_bytes": 8750,
    "heat_pct": null,
    "reach": 3
   },
   {
    "path": "./crates/contextd-core/src/watcher/file_tracker.rs",
-   "lines": 114,
-   "bin_bytes": 5976,
+   "lines": 113,
+   "bin_bytes": 1803,
    "heat_pct": null,
    "reach": 1
   },
@@ -176,7 +176,7 @@
    "lines": 12,
    "bin_bytes": null,
    "heat_pct": null,
-   "reach": 1
+   "reach": 0
   },
   {
    "path": "./crates/contextd-core/src/watcher/snapshot.rs",
@@ -216,7 +216,7 @@
   {
    "path": "./crates/contextd-daemon/src/notify.rs",
    "lines": 130,
-   "bin_bytes": 14557,
+   "bin_bytes": 2146,
    "heat_pct": null,
    "reach": 2
   },
@@ -232,7 +232,7 @@
    "lines": 11,
    "bin_bytes": null,
    "heat_pct": null,
-   "reach": 1
+   "reach": 0
   },
   {
    "path": "./crates/contextd-daemon/src/varlink/protocol.rs",
@@ -292,7 +292,7 @@
   },
   {
    "path": "./qa/edge/src/watcher_edge.rs",
-   "lines": 65,
+   "lines": 64,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 0
@@ -309,7 +309,7 @@
    "lines": 10,
    "bin_bytes": null,
    "heat_pct": null,
-   "reach": 1
+   "reach": 0
   },
   {
    "path": "./qa/unit/src/correlator/package_log_tests.rs",
@@ -320,7 +320,7 @@
   },
   {
    "path": "./qa/unit/src/correlator/pacman_tests.rs",
-   "lines": 39,
+   "lines": 38,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 0
@@ -334,21 +334,21 @@
   },
   {
    "path": "./qa/unit/src/correlator/timestamp_tests.rs",
-   "lines": 67,
+   "lines": 66,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 0
   },
   {
    "path": "./qa/unit/src/ctl_tests.rs",
-   "lines": 236,
+   "lines": 235,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 0
   },
   {
    "path": "./qa/unit/src/daemon_tests.rs",
-   "lines": 156,
+   "lines": 155,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 0
@@ -365,7 +365,7 @@
    "lines": 6,
    "bin_bytes": null,
    "heat_pct": null,
-   "reach": 1
+   "reach": 0
   },
   {
    "path": "./qa/unit/src/index/similarity_tests.rs",
@@ -383,7 +383,7 @@
   },
   {
    "path": "./qa/unit/src/spawn_tests.rs",
-   "lines": 122,
+   "lines": 121,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 0
@@ -414,7 +414,7 @@
    "lines": 8,
    "bin_bytes": null,
    "heat_pct": null,
-   "reach": 1
+   "reach": 0
   },
   {
    "path": "./qa/unit/src/watcher/tracker_tests.rs",
@@ -424,5 +424,5 @@
    "reach": 0
   }
  ],
- "notes": "bin_bytes from newest dev rlib per crate via nm (inlining approx, bins re-link the same code); heat from 88 attributed samples over 8/96 binaries at 10Hz incl. one child level; every repo-resolving frame counts;"
+ "notes": "reach counts referencing files (shared file names qualified by ancestor dir); bin_bytes from newest workspace dev rlib per crate via nm (inlining approx, bins re-link the same code; shims excluded, foreign paths never attributed); heat from 66 attributed samples over 6/72 binaries at 10Hz incl. one child level; every repo-resolving frame counts;"
 }
