@@ -8,8 +8,7 @@ const SEC_PER_MIN: u64 = 60;
 const SEC_PER_HOUR: u64 = 3600;
 const SEC_PER_DAY: u64 = 86_400;
 
-const DAYS_BEFORE_MONTH: [u64; 13] =
-    [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+const DAYS_BEFORE_MONTH: [u64; 13] = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
 
 fn is_leap(y: u64) -> bool {
     (y % 4 == 0 && y % 100 != 0) || y % 400 == 0
@@ -120,7 +119,8 @@ fn parse_iso8601_19(b: &[u8]) -> Option<u64> {
 pub fn parse_dpkg_date_time(date: &str, time: &str) -> Option<u64> {
     let d = date.as_bytes();
     let t = time.as_bytes();
-    if d.len() != 10 || t.len() != 8 || d[4] != b'-' || d[7] != b'-' || t[2] != b':' || t[5] != b':' {
+    if d.len() != 10 || t.len() != 8 || d[4] != b'-' || d[7] != b'-' || t[2] != b':' || t[5] != b':'
+    {
         return None;
     }
     let year = parse_uint(&d[0..4])?;

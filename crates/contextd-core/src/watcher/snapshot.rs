@@ -3,11 +3,7 @@
 //! Produces standard unified diff output between two file revisions.
 
 /// Generates a unified diff format string between previous and current text.
-pub fn compute_text_diff(
-    file_path: &str,
-    old_content: &str,
-    new_content: &str,
-) -> Option<String> {
+pub fn compute_text_diff(file_path: &str, old_content: &str, new_content: &str) -> Option<String> {
     if old_content == new_content {
         return None;
     }

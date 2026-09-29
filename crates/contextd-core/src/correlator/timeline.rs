@@ -53,7 +53,10 @@ pub fn correlate_unit_timeline(
             relevant_pkgs.len()
         )
     } else {
-        format!("No recent configuration drift or package upgrades detected for {}.", unit_name)
+        format!(
+            "No recent configuration drift or package upgrades detected for {}.",
+            unit_name
+        )
     };
 
     UnitIncidentContext {

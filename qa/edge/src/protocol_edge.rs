@@ -26,8 +26,7 @@ mod tests {
         let reply = VarlinkReply::err("", None);
         let bytes = reply.to_bytes();
         assert_eq!(*bytes.last().unwrap(), 0x00);
-        let parsed: serde_json::Value =
-            serde_json::from_slice(&bytes[..bytes.len() - 1]).unwrap();
+        let parsed: serde_json::Value = serde_json::from_slice(&bytes[..bytes.len() - 1]).unwrap();
         assert_eq!(parsed["error"], "");
     }
 
@@ -42,8 +41,7 @@ mod tests {
         });
         let reply = VarlinkReply::ok(nested);
         let bytes = reply.to_bytes();
-        let parsed: serde_json::Value =
-            serde_json::from_slice(&bytes[..bytes.len() - 1]).unwrap();
+        let parsed: serde_json::Value = serde_json::from_slice(&bytes[..bytes.len() - 1]).unwrap();
         assert_eq!(
             parsed["parameters"]["level1"]["level2"]["level3"],
             "deep_value"

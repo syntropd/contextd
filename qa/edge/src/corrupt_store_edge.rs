@@ -20,7 +20,8 @@ mod tests {
         let log_file = tmp.path().join("events.jsonl");
         {
             let mut file = OpenOptions::new().append(true).open(&log_file).unwrap();
-            file.write_all(b"{\"incomplete\": json without ending\n").unwrap();
+            file.write_all(b"{\"incomplete\": json without ending\n")
+                .unwrap();
             file.write_all(b"\x00\xFF\xFE binary garbage\n").unwrap();
             file.write_all(b"\n\n   \n").unwrap(); // Empty lines
         }

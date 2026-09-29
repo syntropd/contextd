@@ -76,12 +76,8 @@ impl Context1Handler {
             .unwrap_or(0);
         let since_us = now_us.saturating_sub(since_seconds * 1_000_000);
 
-        let context = correlate_unit_timeline(
-            unit,
-            &self.diff_store,
-            &self.package_history,
-            since_us,
-        );
+        let context =
+            correlate_unit_timeline(unit, &self.diff_store, &self.package_history, since_us);
 
         VarlinkReply::ok(json!({ "context": context }))
     }
@@ -108,9 +104,7 @@ impl Context1Handler {
     }
 
     fn handle_list_events(&self, params: Option<&Value>) -> VarlinkReply {
-        let unit = params
-            .and_then(|p| p.get("unit"))
-            .and_then(|u| u.as_str());
+        let unit = params.and_then(|p| p.get("unit")).and_then(|u| u.as_str());
 
         let since_seconds = params
             .and_then(|p| p.get("since_seconds"))

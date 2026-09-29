@@ -50,10 +50,7 @@ impl FileTracker {
                 lock.insert(path.to_string(), content.to_string());
             }
             Err(e) => {
-                tracing::error!(
-                    "set_baseline: snapshot mutex poisoned for {}: {}",
-                    path, e
-                );
+                tracing::error!("set_baseline: snapshot mutex poisoned for {}: {}", path, e);
             }
         }
     }
@@ -76,9 +73,10 @@ impl FileTracker {
             )));
         }
         let path_str = file_path.as_ref().to_string_lossy().to_string();
-        let mut lock = self.snapshots.lock().map_err(|_| {
-            ContextdError::Watcher("Failed to acquire snapshot lock".into())
-        })?;
+        let mut lock = self
+            .snapshots
+            .lock()
+            .map_err(|_| ContextdError::Watcher("Failed to acquire snapshot lock".into()))?;
 
         let old_content = lock.get(&path_str).cloned().unwrap_or_default();
         if let Some(diff) = compute_text_diff(&path_str, &old_content, current_content) {

@@ -42,10 +42,7 @@ mod tests {
                 }
             }
             "io.syntrop.Context1.ListEvents" => {
-                let empty = params
-                    .and_then(|p| p.get("limit"))
-                    .and_then(|l| l.as_u64())
-                    == Some(0);
+                let empty = params.and_then(|p| p.get("limit")).and_then(|l| l.as_u64()) == Some(0);
                 if empty {
                     ok(json!({ "events": [] }))
                 } else {
@@ -83,10 +80,8 @@ mod tests {
                 Ok(n) => {
                     buf.extend_from_slice(&chunk[..n]);
                     if let Some(pos) = buf.iter().position(|&b| b == 0x00) {
-                        let req: Value =
-                            serde_json::from_slice(&buf[..pos]).unwrap_or(Value::Null);
-                        let method =
-                            req.get("method").and_then(|m| m.as_str()).unwrap_or("");
+                        let req: Value = serde_json::from_slice(&buf[..pos]).unwrap_or(Value::Null);
+                        let method = req.get("method").and_then(|m| m.as_str()).unwrap_or("");
                         let reply = canned_reply(method, req.get("parameters"));
                         let mut bytes = serde_json::to_vec(&reply).unwrap();
                         bytes.push(0x00);
@@ -127,7 +122,14 @@ mod tests {
             Cli::try_parse_from(["contextctl", "events", "-u", "a.service", "-l", "5"]).unwrap();
         assert!(matches!(cli.command, Commands::Events { .. }));
         let cli = Cli::try_parse_from([
-            "contextctl", "record", "-s", "sentry", "-m", "boom", "-d", "detail",
+            "contextctl",
+            "record",
+            "-s",
+            "sentry",
+            "-m",
+            "boom",
+            "-d",
+            "detail",
         ])
         .unwrap();
         assert!(matches!(cli.command, Commands::Record { .. }));
@@ -159,7 +161,10 @@ mod tests {
     async fn test_client_call_returns_parameters() {
         let (_tmp, sock, server) = spawn_fake_daemon().await;
         let client = ContextdClient::new(&sock);
-        let res = client.call("org.varlink.service.GetInfo", None).await.unwrap();
+        let res = client
+            .call("org.varlink.service.GetInfo", None)
+            .await
+            .unwrap();
         assert_eq!(res["product"], "contextd");
         server.abort();
     }
@@ -181,7 +186,10 @@ mod tests {
     #[tokio::test]
     async fn test_client_call_to_missing_socket_fails() {
         let client = ContextdClient::new("/tmp/contextd-qa-missing.sock");
-        let err = client.call("org.varlink.service.GetInfo", None).await.unwrap_err();
+        let err = client
+            .call("org.varlink.service.GetInfo", None)
+            .await
+            .unwrap_err();
         assert!(err.to_string().contains("Failed to connect"));
     }
 
@@ -208,7 +216,9 @@ mod tests {
     async fn test_exec_events_json_text_and_empty() {
         let (_tmp, sock, server) = spawn_fake_daemon().await;
         let client = ContextdClient::new(&sock);
-        exec_events(&client, Some("a.service"), 60, 10, true).await.unwrap();
+        exec_events(&client, Some("a.service"), 60, 10, true)
+            .await
+            .unwrap();
         exec_events(&client, None, 60, 10, false).await.unwrap();
         exec_events(&client, None, 60, 0, false).await.unwrap();
         server.abort();
@@ -221,7 +231,9 @@ mod tests {
         exec_record(&client, "sentry", Some("a.service"), "boom", Some("detail"))
             .await
             .unwrap();
-        exec_record(&client, "sentry", None, "boom", None).await.unwrap();
+        exec_record(&client, "sentry", None, "boom", None)
+            .await
+            .unwrap();
         server.abort();
     }
 

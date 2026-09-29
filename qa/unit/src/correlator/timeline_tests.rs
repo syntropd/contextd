@@ -21,7 +21,10 @@ mod tests {
 
         // Record unrelated diff
         store
-            .record_diff("/etc/ssh/sshd_config", "--- a/etc/ssh/sshd_config\n+Port 22")
+            .record_diff(
+                "/etc/ssh/sshd_config",
+                "--- a/etc/ssh/sshd_config\n+Port 22",
+            )
             .unwrap();
 
         let timeline = correlate_unit_timeline("nginx.service", &store, &[], 0);

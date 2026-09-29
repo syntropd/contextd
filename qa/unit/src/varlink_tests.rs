@@ -4,9 +4,7 @@
 mod tests {
     use contextd_core::index::EventStore;
     use contextd_core::watcher::DiffStore;
-    use contextd_daemon::varlink::{
-        handle_service_call, Context1Handler, VarlinkReply,
-    };
+    use contextd_daemon::varlink::{handle_service_call, Context1Handler, VarlinkReply};
     use serde_json::json;
     use std::sync::Arc;
     use tempfile::tempdir;
@@ -16,8 +14,7 @@ mod tests {
         let reply = VarlinkReply::ok(json!({ "status": "ok" }));
         let bytes = reply.to_bytes();
         assert_eq!(*bytes.last().unwrap(), 0x00);
-        let parsed: serde_json::Value =
-            serde_json::from_slice(&bytes[..bytes.len() - 1]).unwrap();
+        let parsed: serde_json::Value = serde_json::from_slice(&bytes[..bytes.len() - 1]).unwrap();
         assert_eq!(parsed["parameters"]["status"], "ok");
     }
 
@@ -33,10 +30,8 @@ mod tests {
     #[test]
     fn test_handle_service_get_interface_description() {
         let params = json!({ "interface": "io.syntrop.Context1" });
-        let reply = handle_service_call(
-            "org.varlink.service.GetInterfaceDescription",
-            Some(&params),
-        );
+        let reply =
+            handle_service_call("org.varlink.service.GetInterfaceDescription", Some(&params));
         assert!(reply.is_some());
         let r = reply.unwrap();
         let desc = r.parameters.unwrap();

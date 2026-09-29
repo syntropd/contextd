@@ -43,7 +43,10 @@ impl EventStore {
     /// Appends a new system event to the log file.
     pub fn append(&self, event: &SystemEvent) -> Result<(), ContextdError> {
         let _guard = self.write_lock.lock().map_err(|_| {
-            ContextdError::Io(std::io::Error::new(std::io::ErrorKind::Other, "Lock poison"))
+            ContextdError::Io(std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "Lock poison",
+            ))
         })?;
 
         let mut file = OpenOptions::new()
@@ -51,8 +54,9 @@ impl EventStore {
             .append(true)
             .open(&self.log_path)?;
 
-        let mut line = serde_json::to_vec(event)
-            .map_err(|e| ContextdError::Io(std::io::Error::new(std::io::ErrorKind::InvalidData, e)))?;
+        let mut line = serde_json::to_vec(event).map_err(|e| {
+            ContextdError::Io(std::io::Error::new(std::io::ErrorKind::InvalidData, e))
+        })?;
         line.push(b'\n');
 
         file.write_all(&line)?;

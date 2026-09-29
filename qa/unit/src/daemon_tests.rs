@@ -63,7 +63,10 @@ mod tests {
         let server = spawn_real_server(&sock).await;
         let client = ContextdClient::new(&sock);
 
-        let info = client.call("org.varlink.service.GetInfo", None).await.unwrap();
+        let info = client
+            .call("org.varlink.service.GetInfo", None)
+            .await
+            .unwrap();
         assert_eq!(info["product"], "contextd");
 
         let rec = client

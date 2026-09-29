@@ -26,14 +26,23 @@ pub async fn exec_diffs(client: &ContextdClient, since_seconds: u64, as_json: bo
         .unwrap_or(&[]);
 
     if diffs.is_empty() {
-        println!("No configuration diffs recorded within the past {} seconds.", since_seconds);
+        println!(
+            "No configuration diffs recorded within the past {} seconds.",
+            since_seconds
+        );
         return Ok(());
     }
 
     println!("Recent Configuration Diffs ({})", diffs.len());
     for diff in diffs {
-        let path = diff.get("file_path").and_then(|p| p.as_str()).unwrap_or("unknown");
-        let ts = diff.get("timestamp_us").and_then(|t| t.as_u64()).unwrap_or(0);
+        let path = diff
+            .get("file_path")
+            .and_then(|p| p.as_str())
+            .unwrap_or("unknown");
+        let ts = diff
+            .get("timestamp_us")
+            .and_then(|t| t.as_u64())
+            .unwrap_or(0);
         println!("\n--- {} (timestamp: {}) ---", path, ts);
         if let Some(content) = diff.get("diff_content").and_then(|c| c.as_str()) {
             println!("{}", content.trim_end());

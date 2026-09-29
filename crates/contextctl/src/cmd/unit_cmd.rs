@@ -38,8 +38,14 @@ pub async fn exec_unit(
     if let Some(diffs) = context.get("config_diffs").and_then(|d| d.as_array()) {
         println!("Configuration Diffs ({}):", diffs.len());
         for diff in diffs {
-            let path = diff.get("file_path").and_then(|p| p.as_str()).unwrap_or("unknown");
-            let ts = diff.get("timestamp_us").and_then(|t| t.as_u64()).unwrap_or(0);
+            let path = diff
+                .get("file_path")
+                .and_then(|p| p.as_str())
+                .unwrap_or("unknown");
+            let ts = diff
+                .get("timestamp_us")
+                .and_then(|t| t.as_u64())
+                .unwrap_or(0);
             println!("  * [{}] {}", ts, path);
             if let Some(content) = diff.get("diff_content").and_then(|c| c.as_str()) {
                 for line in content.lines() {
@@ -53,9 +59,18 @@ pub async fn exec_unit(
         println!();
         println!("Package Upgrades ({}):", pkgs.len());
         for pkg in pkgs {
-            let name = pkg.get("package_name").and_then(|n| n.as_str()).unwrap_or("unknown");
-            let action = pkg.get("action").and_then(|a| a.as_str()).unwrap_or("unknown");
-            let ver = pkg.get("version").and_then(|v| v.as_str()).unwrap_or("unknown");
+            let name = pkg
+                .get("package_name")
+                .and_then(|n| n.as_str())
+                .unwrap_or("unknown");
+            let action = pkg
+                .get("action")
+                .and_then(|a| a.as_str())
+                .unwrap_or("unknown");
+            let ver = pkg
+                .get("version")
+                .and_then(|v| v.as_str())
+                .unwrap_or("unknown");
             println!("  * {} {} ({})", action, name, ver);
         }
     }

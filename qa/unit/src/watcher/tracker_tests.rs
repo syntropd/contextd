@@ -15,11 +15,15 @@ mod tests {
         tracker.set_baseline(path, "key=val1\n");
 
         // No change
-        let no_diff = tracker.check_and_record(path, "key=val1\n", &store).unwrap();
+        let no_diff = tracker
+            .check_and_record(path, "key=val1\n", &store)
+            .unwrap();
         assert!(no_diff.is_none());
 
         // Modification
-        let diff = tracker.check_and_record(path, "key=val2\n", &store).unwrap();
+        let diff = tracker
+            .check_and_record(path, "key=val2\n", &store)
+            .unwrap();
         assert!(diff.is_some());
         let record = diff.unwrap();
         assert_eq!(record.file_path, path);
@@ -27,7 +31,9 @@ mod tests {
         assert!(record.diff_content.contains("+key=val2"));
 
         // Subsequent check with same content returns no diff
-        let subsequent = tracker.check_and_record(path, "key=val2\n", &store).unwrap();
+        let subsequent = tracker
+            .check_and_record(path, "key=val2\n", &store)
+            .unwrap();
         assert!(subsequent.is_none());
     }
 

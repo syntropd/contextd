@@ -28,7 +28,15 @@ mod tests {
         ONCE.call_once(|| {
             let status = Command::new("cargo")
                 .current_dir(workspace_root())
-                .args(["build", "--offline", "-q", "--bin", "contextd", "--bin", "contextctl"])
+                .args([
+                    "build",
+                    "--offline",
+                    "-q",
+                    "--bin",
+                    "contextd",
+                    "--bin",
+                    "contextctl",
+                ])
                 .status()
                 .expect("failed to run cargo build for spawn tests");
             assert!(status.success(), "cargo build of binaries failed");

@@ -32,11 +32,10 @@ async fn main() -> Result<()> {
         }
     }
 
-    let config = ContextdConfig::load_or_default(&config_path)
-        .context("Failed loading configuration")?;
+    let config =
+        ContextdConfig::load_or_default(&config_path).context("Failed loading configuration")?;
 
-    fs::create_dir_all(&config.storage_path)
-        .context("Failed creating storage directory")?;
+    fs::create_dir_all(&config.storage_path).context("Failed creating storage directory")?;
 
     let diff_store = Arc::new(DiffStore::new(&config.storage_path)?);
     let event_store = Arc::new(EventStore::new(&config.storage_path)?);

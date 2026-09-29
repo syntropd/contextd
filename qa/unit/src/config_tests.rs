@@ -2,9 +2,7 @@
 
 #[cfg(test)]
 mod tests {
-    use contextd_core::config::{
-        ContextdConfig, DEFAULT_STORAGE_PATH, DEFAULT_SOCKET_PATH,
-    };
+    use contextd_core::config::{ContextdConfig, DEFAULT_SOCKET_PATH, DEFAULT_STORAGE_PATH};
     use std::fs;
     use tempfile::tempdir;
 
@@ -33,7 +31,10 @@ mod tests {
         fs::write(&conf_file, toml_data).unwrap();
 
         let loaded = ContextdConfig::load_or_default(&conf_file).unwrap();
-        assert_eq!(loaded.storage_path.to_str().unwrap(), "/tmp/custom_contextd");
+        assert_eq!(
+            loaded.storage_path.to_str().unwrap(),
+            "/tmp/custom_contextd"
+        );
         assert_eq!(loaded.retention_days, 7);
         assert_eq!(loaded.watched_directories.len(), 2);
     }

@@ -39,7 +39,11 @@ impl DiffStore {
     }
 
     /// Records a new configuration diff snapshot to disk.
-    pub fn record_diff(&self, file_path: &str, diff_content: &str) -> Result<ConfigDiffRecord, ContextdError> {
+    pub fn record_diff(
+        &self,
+        file_path: &str,
+        diff_content: &str,
+    ) -> Result<ConfigDiffRecord, ContextdError> {
         let encoded = Self::encode_path(file_path);
         let path_dir = self.root_dir.join(&encoded);
         fs::create_dir_all(&path_dir)?;
@@ -62,7 +66,11 @@ impl DiffStore {
     }
 
     /// Lists all diff records recorded for a given file since a microsecond timestamp.
-    pub fn list_diffs_for_path(&self, file_path: &str, since_us: u64) -> Result<Vec<ConfigDiffRecord>, ContextdError> {
+    pub fn list_diffs_for_path(
+        &self,
+        file_path: &str,
+        since_us: u64,
+    ) -> Result<Vec<ConfigDiffRecord>, ContextdError> {
         let encoded = Self::encode_path(file_path);
         let path_dir = self.root_dir.join(&encoded);
         let mut records = Vec::new();

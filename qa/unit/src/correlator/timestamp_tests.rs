@@ -26,12 +26,27 @@ mod tests {
         assert!(parse_iso8601_utc("2024-01-01T25:00:00Z").is_none());
         assert!(parse_iso8601_utc("").is_none());
         // Invalid calendar dates that the days-in-month check must reject.
-        assert!(parse_iso8601_utc("2024-02-30T00:00:00Z").is_none(), "Feb 30 should be rejected");
-        assert!(parse_iso8601_utc("2023-02-29T00:00:00Z").is_none(), "Feb 29 in non-leap year");
-        assert!(parse_iso8601_utc("2024-04-31T00:00:00Z").is_none(), "Apr 31 should be rejected");
+        assert!(
+            parse_iso8601_utc("2024-02-30T00:00:00Z").is_none(),
+            "Feb 30 should be rejected"
+        );
+        assert!(
+            parse_iso8601_utc("2023-02-29T00:00:00Z").is_none(),
+            "Feb 29 in non-leap year"
+        );
+        assert!(
+            parse_iso8601_utc("2024-04-31T00:00:00Z").is_none(),
+            "Apr 31 should be rejected"
+        );
         // Trailing junk beyond the optional Z must be rejected.
-        assert!(parse_iso8601_utc("2024-01-01T00:00:00EXTRA").is_none(), "trailing junk rejected");
-        assert!(parse_iso8601_utc("2024-01-01T00:00:00 ").is_none(), "trailing space rejected");
+        assert!(
+            parse_iso8601_utc("2024-01-01T00:00:00EXTRA").is_none(),
+            "trailing junk rejected"
+        );
+        assert!(
+            parse_iso8601_utc("2024-01-01T00:00:00 ").is_none(),
+            "trailing space rejected"
+        );
     }
 
     #[test]

@@ -28,10 +28,16 @@ mod tests {
         let store = DiffStore::new(tmp.path()).unwrap();
 
         store
-            .record_diff("/etc/hosts", "--- a/etc/hosts\n+++ b/etc/hosts\n+1.1.1.1 test\n")
+            .record_diff(
+                "/etc/hosts",
+                "--- a/etc/hosts\n+++ b/etc/hosts\n+1.1.1.1 test\n",
+            )
             .unwrap();
         store
-            .record_diff("/etc/resolv.conf", "--- a/etc/resolv.conf\n+++ b/etc/resolv.conf\n+nameserver 8.8.8.8\n")
+            .record_diff(
+                "/etc/resolv.conf",
+                "--- a/etc/resolv.conf\n+++ b/etc/resolv.conf\n+nameserver 8.8.8.8\n",
+            )
             .unwrap();
 
         let all = store.list_recent_diffs(0).unwrap();
@@ -47,7 +53,9 @@ mod tests {
         let rec = store.record_diff(path, "--- a/etc/fstab\n+test").unwrap();
 
         // Query with since_us in the future should return empty list
-        let empty = store.list_diffs_for_path(path, rec.timestamp_us + 1_000_000).unwrap();
+        let empty = store
+            .list_diffs_for_path(path, rec.timestamp_us + 1_000_000)
+            .unwrap();
         assert!(empty.is_empty());
 
         // Query with past timestamp returns record

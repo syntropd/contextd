@@ -31,7 +31,11 @@ pub fn parse_dnf_log_line(line: &str) -> Option<PackageTransactionRecord> {
         return None;
     }
 
-    let action = if trimmed.contains("Upgraded:") { "upgrade" } else { "install" };
+    let action = if trimmed.contains("Upgraded:") {
+        "upgrade"
+    } else {
+        "install"
+    };
     let pkg_raw = parts.last()?;
 
     let (name, ver) = split_package_nvra(pkg_raw);
