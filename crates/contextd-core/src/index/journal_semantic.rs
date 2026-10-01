@@ -1,5 +1,6 @@
 //! Semantic indexing and hybrid search for Linux systemd journal records.
 
+use super::similarity::cosine_similarity;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 
@@ -67,6 +68,20 @@ impl JournalSemanticIndex {
             }
         }
         count
+    }
+
+    /// Ingests records by executing `journalctl -o json -n <limit> --no-pager`.
+    pub fn ingest_from_journalctl(&mut self, limit: usize) -> usize {
+        let output = std::process::Command::new("/usr/bin/journalctl")
+            .args(["-o", "json", "-n", &limit.to_string(), "--no-pager"])
+            .output();
+        if let Ok(out) = output {
+            if out.status.success() {
+                let text = String::from_utf8_lossy(&out.stdout);
+                return self.ingest_json_lines(&text);
+            }
+        }
+        0
     }
 
     /// Queries the index using hybrid BM25 and token similarity.
@@ -196,26 +211,6 @@ fn tokenize(text: &str) -> Vec<String> {
         .filter(|t| t.len() >= 2)
         .map(|t| t.to_lowercase())
         .collect()
-}
-
-fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
-    if a.len() != b.len() || a.is_empty() {
-        return 0.0;
-    }
-    let mut dot = 0.0;
-    let mut norm_a = 0.0;
-    let mut norm_b = 0.0;
-    for (x, y) in a.iter().zip(b.iter()) {
-        dot += x * y;
-        norm_a += x * x;
-        norm_b += y * y;
-    }
-    let denom = norm_a.sqrt() * norm_b.sqrt();
-    if denom == 0.0 {
-        0.0
-    } else {
-        dot / denom
-    }
 }
 
 #[cfg(test)]

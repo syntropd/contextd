@@ -54,11 +54,20 @@ async fn main() -> Result<()> {
     package_history.sort_by_key(|r: &PackageTransactionRecord| r.timestamp_us);
     let package_history = Arc::new(package_history);
 
+    let mut initial_journal = contextd_core::index::JournalSemanticIndex::new();
+    let ingested = initial_journal.ingest_from_journalctl(200);
+    info!(
+        "Ingested {} initial systemd journal records into semantic index",
+        ingested
+    );
+    let journal_index = Arc::new(std::sync::RwLock::new(initial_journal));
+
     let handler = Context1Handler::new(
         Arc::clone(&diff_store),
         Arc::clone(&event_store),
         Arc::clone(&package_history),
-    );
+    )
+    .with_journal_index(journal_index);
 
     let watcher = WatcherTask::new(
         Arc::clone(&file_tracker),
