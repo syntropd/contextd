@@ -1,6 +1,6 @@
 {
  "repo": "contextd",
- "rev": "ffe5792",
+ "rev": "8787428",
  "dirty": true,
  "pages": [
   {
@@ -26,7 +26,7 @@
   },
   {
    "path": "./crates/contextctl/src/cmd/events_cmd.rs",
-   "lines": 60,
+   "lines": 57,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 1
@@ -131,14 +131,14 @@
   },
   {
    "path": "./crates/contextd-core/src/index/event_store.rs",
-   "lines": 122,
+   "lines": 123,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 1
   },
   {
    "path": "./crates/contextd-core/src/index/journal_semantic.rs",
-   "lines": 217,
+   "lines": 247,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 1
@@ -229,7 +229,7 @@
   },
   {
    "path": "./crates/contextd-daemon/src/varlink/context1.rs",
-   "lines": 235,
+   "lines": 232,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 2
@@ -397,7 +397,7 @@
   },
   {
    "path": "./qa/unit/src/varlink_tests.rs",
-   "lines": 107,
+   "lines": 113,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 0

@@ -42,9 +42,10 @@ impl EventStore {
 
     /// Appends a new system event to the log file.
     pub fn append(&self, event: &SystemEvent) -> Result<(), ContextdError> {
-        let _guard = self.write_lock.lock().map_err(|_| {
-            ContextdError::Io(std::io::Error::other("Lock poison"))
-        })?;
+        let _guard = self
+            .write_lock
+            .lock()
+            .map_err(|_| ContextdError::Io(std::io::Error::other("Lock poison")))?;
 
         let mut file = OpenOptions::new()
             .create(true)

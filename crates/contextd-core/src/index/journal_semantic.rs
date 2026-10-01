@@ -75,11 +75,21 @@ impl JournalSemanticIndex {
     }
 
     /// Queries the index with precomputed query embedding.
-    pub fn search_with_embedding(&self, query: &str, query_embedding: &[f32], limit: usize) -> Vec<JournalMatch> {
+    pub fn search_with_embedding(
+        &self,
+        query: &str,
+        query_embedding: &[f32],
+        limit: usize,
+    ) -> Vec<JournalMatch> {
         self.search_internal(query, Some(query_embedding), limit)
     }
 
-    fn search_internal(&self, query: &str, embedding: Option<&[f32]>, limit: usize) -> Vec<JournalMatch> {
+    fn search_internal(
+        &self,
+        query: &str,
+        embedding: Option<&[f32]>,
+        limit: usize,
+    ) -> Vec<JournalMatch> {
         if self.records.is_empty() {
             return Vec::new();
         }
@@ -90,38 +100,45 @@ impl JournalSemanticIndex {
         let k1 = 1.2;
         let b = 0.75;
 
-        let mut scored: Vec<(f64, usize)> = self.records.iter().enumerate().map(|(idx, rec)| {
-            let doc = &self.doc_tokens[idx];
-            let doc_len = doc.len() as f64;
+        let mut scored: Vec<(f64, usize)> = self
+            .records
+            .iter()
+            .enumerate()
+            .map(|(idx, rec)| {
+                let doc = &self.doc_tokens[idx];
+                let doc_len = doc.len() as f64;
 
-            let mut bm25 = 0.0;
-            let mut tf_map = HashMap::new();
-            for t in doc {
-                *tf_map.entry(t.as_str()).or_insert(0usize) += 1;
-            }
-
-            for q in &query_tokens {
-                let tf = *tf_map.get(q.as_str()).unwrap_or(&0) as f64;
-                if tf > 0.0 {
-                    let df = *self.doc_freq.get(q).unwrap_or(&1) as f64;
-                    let idf = ((n_docs - df + 0.5) / (df + 0.5) + 1.0).ln().max(0.1);
-                    let term_score = idf * (tf * (k1 + 1.0)) / (tf + k1 * (1.0 - b + b * (doc_len / avg_dl)));
-                    bm25 += term_score;
+                let mut bm25 = 0.0;
+                let mut tf_map = HashMap::new();
+                for t in doc {
+                    *tf_map.entry(t.as_str()).or_insert(0usize) += 1;
                 }
-            }
 
-            let mut final_score = bm25;
-            if let (Some(q_emb), Some(doc_emb)) = (embedding, &rec.embedding) {
-                let cosine = cosine_similarity(q_emb, doc_emb);
-                final_score = 0.5 * bm25 + 0.5 * (cosine as f64 * 10.0);
-            }
+                for q in &query_tokens {
+                    let tf = *tf_map.get(q.as_str()).unwrap_or(&0) as f64;
+                    if tf > 0.0 {
+                        let df = *self.doc_freq.get(q).unwrap_or(&1) as f64;
+                        let idf = ((n_docs - df + 0.5) / (df + 0.5) + 1.0).ln().max(0.1);
+                        let term_score = idf * (tf * (k1 + 1.0))
+                            / (tf + k1 * (1.0 - b + b * (doc_len / avg_dl)));
+                        bm25 += term_score;
+                    }
+                }
 
-            (final_score, idx)
-        }).collect();
+                let mut final_score = bm25;
+                if let (Some(q_emb), Some(doc_emb)) = (embedding, &rec.embedding) {
+                    let cosine = cosine_similarity(q_emb, doc_emb);
+                    final_score = 0.5 * bm25 + 0.5 * (cosine as f64 * 10.0);
+                }
+
+                (final_score, idx)
+            })
+            .collect();
 
         scored.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal));
 
-        scored.into_iter()
+        scored
+            .into_iter()
             .take(limit)
             .filter(|(s, _)| *s > 0.0)
             .map(|(score, idx)| {
@@ -142,18 +159,27 @@ fn parse_journal_value(val: &serde_json::Value) -> Option<JournalRecord> {
     let message = match val.get("MESSAGE") {
         Some(serde_json::Value::String(s)) => s.clone(),
         Some(serde_json::Value::Array(arr)) => {
-            let bytes: Vec<u8> = arr.iter().filter_map(|v| v.as_u64().map(|b| b as u8)).collect();
+            let bytes: Vec<u8> = arr
+                .iter()
+                .filter_map(|v| v.as_u64().map(|b| b as u8))
+                .collect();
             String::from_utf8_lossy(&bytes).to_string()
         }
         _ => return None,
     };
 
-    let unit = val.get("_SYSTEMD_UNIT").and_then(|v| v.as_str()).map(ToString::to_string);
+    let unit = val
+        .get("_SYSTEMD_UNIT")
+        .and_then(|v| v.as_str())
+        .map(ToString::to_string);
     let priority = val.get("PRIORITY").and_then(|v| {
-        v.as_i64().map(|n| n as i32).or_else(|| v.as_str().and_then(|s| s.parse::<i32>().ok()))
+        v.as_i64()
+            .map(|n| n as i32)
+            .or_else(|| v.as_str().and_then(|s| s.parse::<i32>().ok()))
     });
     let timestamp_us = val.get("__REALTIME_TIMESTAMP").and_then(|v| {
-        v.as_u64().or_else(|| v.as_str().and_then(|s| s.parse::<u64>().ok()))
+        v.as_u64()
+            .or_else(|| v.as_str().and_then(|s| s.parse::<u64>().ok()))
     });
 
     Some(JournalRecord {
@@ -185,7 +211,11 @@ fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
         norm_b += y * y;
     }
     let denom = norm_a.sqrt() * norm_b.sqrt();
-    if denom == 0.0 { 0.0 } else { dot / denom }
+    if denom == 0.0 {
+        0.0
+    } else {
+        dot / denom
+    }
 }
 
 #[cfg(test)]

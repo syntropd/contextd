@@ -95,13 +95,19 @@ mod tests {
         });
 
         let reply = handler
-            .handle_call("io.syntrop.Context1.QueryJournalSemantic", Some(&query_params))
+            .handle_call(
+                "io.syntrop.Context1.QueryJournalSemantic",
+                Some(&query_params),
+            )
             .unwrap();
         assert!(reply.error.is_none());
         let params = reply.parameters.unwrap();
         let matches = params["matches"].as_array().unwrap();
         assert_eq!(matches.len(), 1);
-        assert!(matches[0]["message"].as_str().unwrap().contains("OOM killer"));
+        assert!(matches[0]["message"]
+            .as_str()
+            .unwrap()
+            .contains("OOM killer"));
         assert_eq!(matches[0]["unit"].as_str(), Some("worker.service"));
     }
 }

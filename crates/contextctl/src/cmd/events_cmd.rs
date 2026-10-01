@@ -41,10 +41,7 @@ pub async fn exec_events(
         return Ok(());
     }
 
-    println!(
-        "{:<24} {:<16} {:<24} SUMMARY",
-        "EVENT ID", "SOURCE", "UNIT"
-    );
+    println!("{:<24} {:<16} {:<24} SUMMARY", "EVENT ID", "SOURCE", "UNIT");
     println!("{}", "-".repeat(80));
 
     for evt in events {

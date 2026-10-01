@@ -214,10 +214,7 @@ impl Context1Handler {
             }
         };
 
-        let limit = params
-            .get("limit")
-            .and_then(|l| l.as_u64())
-            .unwrap_or(20) as usize;
+        let limit = params.get("limit").and_then(|l| l.as_u64()).unwrap_or(20) as usize;
 
         let index_guard = match self.journal_index.read() {
             Ok(g) => g,
