@@ -90,10 +90,9 @@ pub fn parse_pacman_log_line(line: &str) -> Option<PackageTransactionRecord> {
         ("upgrade", s)
     } else if let Some(s) = action_keyword.strip_prefix("installed ") {
         ("install", s)
-    } else if let Some(s) = action_keyword.strip_prefix("removed ") {
-        ("remove", s)
     } else {
-        return None;
+        let s = action_keyword.strip_prefix("removed ")?;
+        ("remove", s)
     };
 
     let open = rest.find('(')?;
@@ -118,15 +117,13 @@ pub fn parse_pacman_log_line(line: &str) -> Option<PackageTransactionRecord> {
 /// Parses lines from a buffered reader using autodetection.
 pub fn parse_package_log_stream<R: BufRead>(reader: R) -> Vec<PackageTransactionRecord> {
     let mut records = Vec::new();
-    for line_res in reader.lines() {
-        if let Ok(line) = line_res {
-            if let Some(rec) = parse_dnf_log_line(&line) {
-                records.push(rec);
-            } else if let Some(rec) = parse_dpkg_log_line(&line) {
-                records.push(rec);
-            } else if let Some(rec) = parse_pacman_log_line(&line) {
-                records.push(rec);
-            }
+    for line in reader.lines().map_while(Result::ok) {
+        if let Some(rec) = parse_dnf_log_line(&line) {
+            records.push(rec);
+        } else if let Some(rec) = parse_dpkg_log_line(&line) {
+            records.push(rec);
+        } else if let Some(rec) = parse_pacman_log_line(&line) {
+            records.push(rec);
         }
     }
     records

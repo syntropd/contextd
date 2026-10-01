@@ -21,6 +21,12 @@ pub struct FileTracker {
     max_file_bytes: usize,
 }
 
+impl Default for FileTracker {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl FileTracker {
     /// Creates an empty file tracker with the default 1 MiB per-file cap.
     pub fn new() -> Self {

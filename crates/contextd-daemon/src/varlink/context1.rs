@@ -5,10 +5,10 @@
 
 use super::protocol::VarlinkReply;
 use contextd_core::correlator::{correlate_unit_timeline, PackageTransactionRecord};
-use contextd_core::index::{EventStore, SystemEvent};
+use contextd_core::index::{EventStore, JournalSemanticIndex, SystemEvent};
 use contextd_core::watcher::DiffStore;
 use serde_json::{json, Value};
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Shared state required to process Context1 method calls.
@@ -17,6 +17,7 @@ pub struct Context1Handler {
     diff_store: Arc<DiffStore>,
     event_store: Arc<EventStore>,
     package_history: Arc<Vec<PackageTransactionRecord>>,
+    journal_index: Arc<RwLock<JournalSemanticIndex>>,
 }
 
 impl Context1Handler {
@@ -30,7 +31,19 @@ impl Context1Handler {
             diff_store,
             event_store,
             package_history,
+            journal_index: Arc::new(RwLock::new(JournalSemanticIndex::new())),
         }
+    }
+
+    /// Attaches a custom journal semantic index.
+    pub fn with_journal_index(mut self, index: Arc<RwLock<JournalSemanticIndex>>) -> Self {
+        self.journal_index = index;
+        self
+    }
+
+    /// Returns a reference to the journal semantic index.
+    pub fn journal_index(&self) -> &Arc<RwLock<JournalSemanticIndex>> {
+        &self.journal_index
     }
 
     /// Dispatches incoming io.syntrop.Context1 method calls.
@@ -40,6 +53,9 @@ impl Context1Handler {
             "io.syntrop.Context1.ListRecentDiffs" => Some(self.handle_list_recent_diffs(params)),
             "io.syntrop.Context1.ListEvents" => Some(self.handle_list_events(params)),
             "io.syntrop.Context1.RecordEvent" => Some(self.handle_record_event(params)),
+            "io.syntrop.Context1.QueryJournalSemantic" => {
+                Some(self.handle_query_journal_semantic(params))
+            }
             _ => None,
         }
     }
@@ -175,5 +191,45 @@ impl Context1Handler {
                 Some(json!({ "reason": e.to_string() })),
             ),
         }
+    }
+
+    fn handle_query_journal_semantic(&self, params: Option<&Value>) -> VarlinkReply {
+        let params = match params {
+            Some(p) => p,
+            None => {
+                return VarlinkReply::err(
+                    "io.syntrop.Context1.InvalidParameter",
+                    Some(json!({ "parameter": "parameters" })),
+                )
+            }
+        };
+
+        let query = match params.get("query").and_then(|q| q.as_str()) {
+            Some(q) => q,
+            None => {
+                return VarlinkReply::err(
+                    "io.syntrop.Context1.InvalidParameter",
+                    Some(json!({ "parameter": "query" })),
+                )
+            }
+        };
+
+        let limit = params
+            .get("limit")
+            .and_then(|l| l.as_u64())
+            .unwrap_or(20) as usize;
+
+        let index_guard = match self.journal_index.read() {
+            Ok(g) => g,
+            Err(e) => {
+                return VarlinkReply::err(
+                    "io.syntrop.Context1.OperationFailed",
+                    Some(json!({ "reason": format!("Index lock poisoned: {}", e) })),
+                )
+            }
+        };
+
+        let matches = index_guard.search(query, limit);
+        VarlinkReply::ok(json!({ "matches": matches }))
     }
 }

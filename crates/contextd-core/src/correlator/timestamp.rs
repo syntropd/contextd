@@ -11,7 +11,7 @@ const SEC_PER_DAY: u64 = 86_400;
 const DAYS_BEFORE_MONTH: [u64; 13] = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
 
 fn is_leap(y: u64) -> bool {
-    (y % 4 == 0 && y % 100 != 0) || y % 400 == 0
+    (y.is_multiple_of(4) && !y.is_multiple_of(100)) || y.is_multiple_of(400)
 }
 
 fn days_in_month(month: u64, year: u64) -> u64 {
@@ -59,14 +59,13 @@ fn parse_uint(b: &[u8]) -> Option<u64> {
 /// - `YYYY-MM-DDTHH:MM:SS` (19 bytes, naive UTC)
 /// - `YYYY-MM-DDTHH:MM:SSZ` (20 bytes, explicit UTC)
 /// - `YYYY-MM-DDTHH:MM:SS+HHMM` or `-HHMM` (24 bytes, numeric offset)
+///
 /// Trailing junk beyond the timezone marker is rejected. Non-UTC
 /// offsets are converted to UTC: `+0000` is a no-op, `+0530` adds
 /// 5h30m to the resulting timestamp.
 pub fn parse_iso8601_utc(s: &str) -> Option<u64> {
     let b = s.as_bytes();
-    if b.len() == 19 {
-        parse_iso8601_19(&b[0..19])
-    } else if b.len() == 20 && b[19] == b'Z' {
+    if b.len() == 19 || (b.len() == 20 && b[19] == b'Z') {
         parse_iso8601_19(&b[0..19])
     } else if b.len() == 24 && (b[19] == b'+' || b[19] == b'-') {
         let naive = parse_iso8601_19(&b[0..19])?;

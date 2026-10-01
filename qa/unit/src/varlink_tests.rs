@@ -74,4 +74,34 @@ mod tests {
         let events = list_reply.parameters.unwrap();
         assert_eq!(events["events"].as_array().unwrap().len(), 1);
     }
+
+    #[test]
+    fn test_context1_query_journal_semantic() {
+        let tmp = tempdir().unwrap();
+        let diff_store = Arc::new(DiffStore::new(tmp.path()).unwrap());
+        let event_store = Arc::new(EventStore::new(tmp.path()).unwrap());
+        let handler = Context1Handler::new(diff_store, event_store, Arc::new(vec![]));
+
+        // Ingest into index
+        {
+            let mut idx = handler.journal_index().write().unwrap();
+            let raw_json = r#"{"MESSAGE":"OOM killer triggered for worker thread","PRIORITY":"3","_SYSTEMD_UNIT":"worker.service"}"#;
+            idx.ingest_json_lines(raw_json);
+        }
+
+        let query_params = json!({
+            "query": "oom killer worker",
+            "limit": 5
+        });
+
+        let reply = handler
+            .handle_call("io.syntrop.Context1.QueryJournalSemantic", Some(&query_params))
+            .unwrap();
+        assert!(reply.error.is_none());
+        let params = reply.parameters.unwrap();
+        let matches = params["matches"].as_array().unwrap();
+        assert_eq!(matches.len(), 1);
+        assert!(matches[0]["message"].as_str().unwrap().contains("OOM killer"));
+        assert_eq!(matches[0]["unit"].as_str(), Some("worker.service"));
+    }
 }

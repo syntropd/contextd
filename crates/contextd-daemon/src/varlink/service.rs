@@ -36,10 +36,19 @@ type Event (
   details: ?string
 )
 
+type JournalMatch (
+  message: string,
+  unit: ?string,
+  priority: ?int,
+  score: float,
+  timestamp_us: ?int
+)
+
 method GetUnitContext(unit: string, since_seconds: int) -> (context: UnitContext)
 method ListRecentDiffs(since_seconds: int) -> (diffs: []ConfigDiff)
 method ListEvents(unit: ?string, since_seconds: int, limit: int) -> (events: []Event)
 method RecordEvent(source: string, unit: ?string, summary: string, details: ?string) -> (event_id: string)
+method QueryJournalSemantic(query: string, limit: int) -> (matches: []JournalMatch)
 
 error InvalidParameter(parameter: string)
 error OperationFailed(reason: string)

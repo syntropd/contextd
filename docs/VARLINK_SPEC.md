@@ -38,10 +38,19 @@ type Event (
   details: ?string
 )
 
+type JournalMatch (
+  message: string,
+  unit: ?string,
+  priority: ?int,
+  score: float,
+  timestamp_us: ?int
+)
+
 method GetUnitContext(unit: string, since_seconds: int) -> (context: UnitContext)
 method ListRecentDiffs(since_seconds: int) -> (diffs: []ConfigDiff)
 method ListEvents(unit: ?string, since_seconds: int, limit: int) -> (events: []Event)
 method RecordEvent(source: string, unit: ?string, summary: string, details: ?string) -> (event_id: string)
+method QueryJournalSemantic(query: string, limit: int) -> (matches: []JournalMatch)
 
 error InvalidParameter(parameter: string)
 error OperationFailed(reason: string)
@@ -82,3 +91,11 @@ Appends a new event into the append-only causality event store.
   - `details` (?string): Diagnostic snippet or error trace.
 - Returns:
   - `event_id` (string): Generated event identifier.
+
+### 2.5 `QueryJournalSemantic`
+Queries ingested Linux journal records using hybrid BM25 and semantic cosine similarity.
+- Parameters:
+  - `query` (string): Natural language or keyword search query.
+  - `limit` (int): Maximum records to return.
+- Returns:
+  - `matches` (`[]JournalMatch`): Ranked list of matching journal log records.
