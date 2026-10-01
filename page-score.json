@@ -1,7 +1,7 @@
 {
  "repo": "contextd",
- "rev": "aed6abe",
- "dirty": true,
+ "rev": "d96b292",
+ "dirty": false,
  "pages": [
   {
    "path": "./crates/contextctl/src/client.rs",
