@@ -4,6 +4,12 @@ All notable changes to contextd are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-10-04
+
+### Changed
+- Bumped workspace packages and internal dependencies to 0.6.0.
+- Synchronized causality chronologies with v0.6.0 multi-GPU and paged KV events.
+
 ## [0.2.0] - 2026-09-24
 
 ### Changed
