@@ -1,6 +1,6 @@
 {
  "repo": "contextd",
- "rev": "653838b",
+ "rev": "60aa0b7",
  "dirty": false,
  "pages": [
   {
@@ -215,7 +215,7 @@
   },
   {
    "path": "./crates/contextd-daemon/src/main.rs",
-   "lines": 127,
+   "lines": 133,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 0
@@ -223,6 +223,13 @@
   {
    "path": "./crates/contextd-daemon/src/notify.rs",
    "lines": 130,
+   "bin_bytes": null,
+   "heat_pct": null,
+   "reach": 2
+  },
+  {
+   "path": "./crates/contextd-daemon/src/varlink/auth.rs",
+   "lines": 155,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 2
@@ -236,7 +243,7 @@
   },
   {
    "path": "./crates/contextd-daemon/src/varlink/mod.rs",
-   "lines": 11,
+   "lines": 16,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 0
@@ -250,7 +257,7 @@
   },
   {
    "path": "./crates/contextd-daemon/src/varlink/server.rs",
-   "lines": 102,
+   "lines": 123,
    "bin_bytes": null,
    "heat_pct": null,
    "reach": 1

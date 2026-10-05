@@ -99,7 +99,13 @@ async fn main() -> Result<()> {
         }
     };
 
-    let server = VarlinkServer::new(listener, handler);
+    let resolved_gid = contextd_daemon::varlink::lookup_group("syntrop");
+    let trusted_group = if resolved_gid != contextd_daemon::varlink::UNRESOLVED_GID {
+        contextd_daemon::varlink::TrustedGroup::from_gid(resolved_gid)
+    } else {
+        contextd_daemon::varlink::TrustedGroup::from_gid(unsafe { libc::getgid() })
+    };
+    let server = VarlinkServer::new(listener, handler).with_trusted_group(trusted_group);
 
     notify_ready();
     info!("contextd successfully initialized and ready");

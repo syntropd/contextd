@@ -1,7 +1,9 @@
 //! Varlink Unix domain socket listener and protocol dispatcher.
 //!
-//! Provides the asynchronous request-reply loop for contextd clients.
+//! Provides the asynchronous request-reply loop for contextd clients,
+//! gated by kernel-verified SO_PEERCRED authorization.
 
+use super::auth::{authorize_peer, TrustedGroup};
 use super::context1::Context1Handler;
 use super::protocol::{VarlinkCall, VarlinkReply};
 use super::service::handle_service_call;
@@ -15,26 +17,36 @@ use tracing::{debug, error, info, warn};
 pub struct VarlinkServer {
     listener: UnixListener,
     handler: Arc<Context1Handler>,
+    trusted_group: TrustedGroup,
 }
 
 impl VarlinkServer {
     /// Creates a new VarlinkServer from a bound Tokio UnixListener.
     pub fn new(listener: UnixListener, handler: Context1Handler) -> Self {
+        let own_gid = unsafe { libc::getgid() };
         Self {
             listener,
             handler: Arc::new(handler),
+            trusted_group: TrustedGroup::from_gid(own_gid),
         }
+    }
+
+    /// Attaches a custom TrustedGroup for peer authorization.
+    pub fn with_trusted_group(mut self, trusted_group: TrustedGroup) -> Self {
+        self.trusted_group = trusted_group;
+        self
     }
 
     /// Runs the accept and dispatch loop until cancelled or error.
     pub async fn run(self) -> Result<()> {
         info!("Varlink server accepting connections");
+        let trusted_group = self.trusted_group;
         loop {
             match self.listener.accept().await {
                 Ok((stream, _)) => {
                     let handler = Arc::clone(&self.handler);
                     tokio::spawn(async move {
-                        if let Err(e) = handle_client(stream, handler).await {
+                        if let Err(e) = handle_client(stream, handler, trusted_group).await {
                             debug!("Client connection terminated: {}", e);
                         }
                     });
@@ -48,7 +60,16 @@ impl VarlinkServer {
     }
 }
 
-async fn handle_client(mut stream: UnixStream, handler: Arc<Context1Handler>) -> Result<()> {
+async fn handle_client(
+    mut stream: UnixStream,
+    handler: Arc<Context1Handler>,
+    trusted_group: TrustedGroup,
+) -> Result<()> {
+    if let Err(e) = authorize_peer(&stream, trusted_group) {
+        warn!("contextd Varlink peer authorization rejected: {}", e);
+        return Err(e);
+    }
+
     let mut buffer = Vec::with_capacity(4096);
     let mut chunk = [0u8; 1024];
 
