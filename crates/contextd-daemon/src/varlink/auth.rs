@@ -101,24 +101,12 @@ pub fn is_user_in_group(uid: u32, target_gid: u32) -> bool {
 
     let mut ngroups: libc::c_int = 64;
     let mut groups = vec![0 as libc::gid_t; 64];
-    let res = unsafe {
-        libc::getgrouplist(
-            username,
-            primary_gid,
-            groups.as_mut_ptr(),
-            &mut ngroups,
-        )
-    };
+    let res =
+        unsafe { libc::getgrouplist(username, primary_gid, groups.as_mut_ptr(), &mut ngroups) };
     if res == -1 && ngroups > 64 {
         groups.resize(ngroups as usize, 0);
-        let res2 = unsafe {
-            libc::getgrouplist(
-                username,
-                primary_gid,
-                groups.as_mut_ptr(),
-                &mut ngroups,
-            )
-        };
+        let res2 =
+            unsafe { libc::getgrouplist(username, primary_gid, groups.as_mut_ptr(), &mut ngroups) };
         if res2 == -1 {
             return false;
         }
